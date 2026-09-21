@@ -5,7 +5,7 @@ import {
   getMatchesForSeason,
   getMatchResult,
   getSeasonById,
-  getSeasonOverviewStats,
+  statsFromMatches,
 } from "@/lib/stats";
 import { formatDate } from "@/lib/week";
 import { StatGrid } from "@/components/StatGrid";
@@ -25,8 +25,8 @@ export default async function SeasonDetailPage({
     notFound();
   }
 
-  const stats = await getSeasonOverviewStats(season.id);
   const matches = await getMatchesForSeason(season.id);
+  const stats = statsFromMatches(matches);
 
   return (
     <div className="flex flex-col gap-8">

@@ -57,8 +57,16 @@ export async function getMatchesForSeason(seasonId: number): Promise<Match[]> {
 
 /** Matches in the user's current (active, not yet ended) season. */
 export async function getMatchesForUser(userId: number): Promise<Match[]> {
-  const season = await getCurrentSeason(userId);
-  return getMatchesForSeason(season.id);
+  // Single joined query instead of "find current season" + "get its matches"
+  // as two round trips — this function is called on nearly every page.
+  return (await db
+    .prepare(
+      `SELECT m.* FROM matches m
+       JOIN seasons s ON s.id = m.season_id
+       WHERE s.user_id = ? AND s.ended_at IS NULL
+       ORDER BY m.played_on DESC, m.id DESC`
+    )
+    .all(userId)) as Match[];
 }
 
 function aggregate(matches: Match[]): CoreStats {
@@ -106,7 +114,8 @@ function aggregate(matches: Match[]): CoreStats {
   };
 }
 
-function statsFromMatches(matches: Match[], competition?: Competition): OverviewStats {
+/** Pure — computes stats from a match list you already have, no DB round trip. */
+export function statsFromMatches(matches: Match[], competition?: Competition): OverviewStats {
   const scoped = competition ? matches.filter((m) => m.competition === competition) : matches;
   return {
     ...aggregate(scoped),

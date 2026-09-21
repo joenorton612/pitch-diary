@@ -1,26 +1,22 @@
 import Link from "next/link";
 import { requireUser } from "@/lib/session";
-import { getMatchesForUser, getMatchResult, getOverviewStats } from "@/lib/stats";
+import { getMatchesForUser, getMatchResult, statsFromMatches } from "@/lib/stats";
 import { formatDate } from "@/lib/week";
 import type { Match } from "@/lib/types";
 import { CompetitionStatTabs } from "./CompetitionStatTabs";
 
 export default async function OverviewPage() {
   const user = await requireUser();
+  // Fetched once and reused for every competition tab below — statsFromMatches
+  // is pure (no DB call), so this avoids five separate round trips to Turso.
   const matches = await getMatchesForUser(user.id);
   const recent = matches[0];
 
-  const [statsAll, statsLeague, statsCup, statsFriendly] = await Promise.all([
-    getOverviewStats(user.id),
-    getOverviewStats(user.id, "League"),
-    getOverviewStats(user.id, "Cup"),
-    getOverviewStats(user.id, "Friendly"),
-  ]);
   const statsByTab = {
-    All: statsAll,
-    League: statsLeague,
-    Cup: statsCup,
-    Friendly: statsFriendly,
+    All: statsFromMatches(matches),
+    League: statsFromMatches(matches, "League"),
+    Cup: statsFromMatches(matches, "Cup"),
+    Friendly: statsFromMatches(matches, "Friendly"),
   };
 
   const matchesByTab = {

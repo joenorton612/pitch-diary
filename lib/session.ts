@@ -1,10 +1,13 @@
+import { cache } from "react";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import db from "./db";
 import { SESSION_COOKIE_NAME, verifySessionToken } from "./auth";
 import type { User } from "./types";
 
-export async function getCurrentUser(): Promise<User | null> {
+// Wrapped in React's cache() so the dashboard layout and every page under it
+// share one lookup per request instead of each re-querying the database.
+export const getCurrentUser = cache(async (): Promise<User | null> => {
   const cookieStore = await cookies();
   const token = cookieStore.get(SESSION_COOKIE_NAME)?.value;
   if (!token) return null;
@@ -17,7 +20,7 @@ export async function getCurrentUser(): Promise<User | null> {
     .get(session.uid)) as User | undefined;
 
   return user ?? null;
-}
+});
 
 export function isAdmin(user: User | null): boolean {
   if (!user) return false;

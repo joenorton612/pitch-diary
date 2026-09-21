@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/session";
-import { getMatchesForUser, getMatchResult, getOverviewStats, getUserById } from "@/lib/stats";
+import { getMatchesForUser, getMatchResult, statsFromMatches, getUserById } from "@/lib/stats";
 import { formatDate } from "@/lib/week";
 import { StatGrid } from "@/components/StatGrid";
 import { AdminDeleteUserButton } from "@/components/AdminDeleteUserButton";
@@ -20,8 +20,8 @@ export default async function AdminUserPage({
     notFound();
   }
 
-  const stats = await getOverviewStats(user.id);
   const matches = await getMatchesForUser(user.id);
+  const stats = statsFromMatches(matches);
 
   return (
     <div className="flex flex-col gap-8">
