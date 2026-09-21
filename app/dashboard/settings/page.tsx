@@ -1,4 +1,5 @@
 import { requireUser } from "@/lib/session";
+import { AppearanceForm } from "./AppearanceForm";
 import { ProfileForm } from "./ProfileForm";
 import { PasswordForm } from "./PasswordForm";
 import { DeleteAccountForm } from "./DeleteAccountForm";
@@ -14,6 +15,13 @@ export default async function SettingsPage() {
           Manage your profile, password, and account.
         </p>
       </div>
+
+      <Section
+        title="Appearance"
+        description="Pick a look for light mode and a separate one for dark mode — the sun/moon button up top switches between whichever two you choose here."
+      >
+        <AppearanceForm />
+      </Section>
 
       <Section title="Profile" description="Your name, age, position and club.">
         <ProfileForm user={user} />

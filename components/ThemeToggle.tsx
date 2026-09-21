@@ -1,7 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import { getServerTheme, getTheme, setTheme, subscribeTheme } from "./theme-store";
+import { getMode, getServerMode, setMode, subscribeTheme } from "./theme-store";
 
 export function ThemeToggle({
   className = "",
@@ -14,13 +14,13 @@ export function ThemeToggle({
   // Renders the server's "light" snapshot on the initial client render too, so
   // hydration always matches — then reconciles to the real value right after,
   // without the loud mismatch warning a plain useState/useEffect pair would cause.
-  const theme = useSyncExternalStore(subscribeTheme, getTheme, getServerTheme);
-  const next = theme === "dark" ? "light" : "dark";
+  const mode = useSyncExternalStore(subscribeTheme, getMode, getServerMode);
+  const next = mode === "dark" ? "light" : "dark";
 
   return (
     <button
       type="button"
-      onClick={() => setTheme(next)}
+      onClick={() => setMode(next)}
       aria-label={`Switch to ${next} mode`}
       className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border transition ${
         variant === "onDark"
@@ -28,7 +28,7 @@ export function ThemeToggle({
           : "border-cream-300 text-ink/70 hover:bg-cream-300"
       } ${className}`}
     >
-      {theme === "dark" ? (
+      {mode === "dark" ? (
         <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5">
           <circle cx="12" cy="12" r="4.5" stroke="currentColor" strokeWidth="1.6" />
           <path

@@ -1,11 +1,11 @@
 @import "tailwindcss";
 
-@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
-
 :root {
+  /* Base fallback (used only before the theme script sets an explicit style) — matches light-classic. */
   --background: #f6f5ef;
   --foreground: #10231a;
 
+  /* Brand colors: constant across every style, light or dark. */
   --color-pitch-950: #071a0e;
   --color-pitch-900: #0b2414;
   --color-pitch-800: #113420;
@@ -18,27 +18,83 @@
   --color-gold-500: #d4a72c;
   --color-gold-600: #b78e22;
 
+  /* Semantic tokens: the part that actually changes between named styles. */
   --color-cream-100: #fdfcf9;
   --color-cream-200: #f6f5ef;
   --color-cream-300: #ece9de;
-
-  /* Semantic tokens: flip between themes, unlike the brand colors above */
   --color-ink: #10231a;
   --color-field: #ffffff;
   --color-win: #16452a;
 }
 
-:root[data-theme="dark"] {
+/* ---- Light styles ---- */
+
+:root[data-theme="light-classic"] {
+  --background: #f6f5ef;
+  --foreground: #10231a;
+  --color-cream-100: #fdfcf9;
+  --color-cream-200: #f6f5ef;
+  --color-cream-300: #ece9de;
+  --color-ink: #10231a;
+  --color-field: #ffffff;
+  --color-win: #16452a;
+}
+
+:root[data-theme="light-sunrise"] {
+  --background: #fdf3ea;
+  --foreground: #2b1d0f;
+  --color-cream-100: #fffaf5;
+  --color-cream-200: #fdf3ea;
+  --color-cream-300: #f0ddc8;
+  --color-ink: #2b1d0f;
+  --color-field: #ffffff;
+  --color-win: #166b3a;
+}
+
+:root[data-theme="light-mint"] {
+  --background: #eef7f0;
+  --foreground: #10241a;
+  --color-cream-100: #f8fdf9;
+  --color-cream-200: #eef7f0;
+  --color-cream-300: #d9ede0;
+  --color-ink: #10241a;
+  --color-field: #ffffff;
+  --color-win: #16452a;
+}
+
+/* ---- Dark styles ---- */
+
+:root[data-theme="dark-forest"] {
   --background: #0a1410;
   --foreground: #eef1ec;
-
   --color-cream-100: #142019;
   --color-cream-200: #0a1410;
   --color-cream-300: #253530;
-
   --color-ink: #eef1ec;
   --color-field: #101c16;
   --color-win: #6fcf97;
+}
+
+:root[data-theme="dark-ocean"] {
+  --background: #0a1420;
+  --foreground: #eaf2f7;
+  --color-cream-100: #13212f;
+  --color-cream-200: #0a1420;
+  --color-cream-300: #24394a;
+  --color-ink: #eaf2f7;
+  --color-field: #0e1b26;
+  --color-win: #6fcf97;
+}
+
+:root[data-theme="dark-midnight"] {
+  --background: #111113;
+  --foreground: #f2f2f3;
+  --color-cream-100: #1c1c1f;
+  --color-cream-200: #111113;
+  --color-cream-300: #333338;
+  --color-ink: #f2f2f3;
+  --color-field: #17171a;
+  --color-win: #7fd99a;
 }
 
 @theme inline {
@@ -70,6 +126,7 @@
 body {
   background: var(--background);
   color: var(--foreground);
+  transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 .bg-pitch-lines {
